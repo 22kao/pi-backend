@@ -1,7 +1,7 @@
 package br.com.iftm.adsge.pibackend.config;
 
 import br.com.iftm.adsge.pibackend.models.User;
-import br.com.iftm.adsge.pibackend.repositorys.UserRepository;
+import br.com.iftm.adsge.pibackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
