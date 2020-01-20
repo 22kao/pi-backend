@@ -7,14 +7,19 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Phone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank(message = "Phone cannot be blank")
     private String phone;
+
     private String username;
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;

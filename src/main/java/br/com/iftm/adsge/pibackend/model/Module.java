@@ -1,9 +1,6 @@
 package br.com.iftm.adsge.pibackend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,13 +8,21 @@ import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Module {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotBlank(message = "Module description cannot be blank")
     private String description;
 
-    @OneToMany(mappedBy = "module")
-    private List<ModuleImplantation> modulesImplantation;
+    @Transient
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ModuleImplantation> moduleImplantation;
+
+    public Module(String description){
+        this.description = description;
+    }
 }

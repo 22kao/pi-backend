@@ -12,17 +12,30 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String cep;
+
     @NotBlank(message = "Address street cannot be blank")
     private String street;
+
     private String city;
+
     private String state;
+
     @NotNull(message = "Address number cannot be null")
     private Integer number;
+
     @OneToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
+
+    public Address(String street, Integer number, Company company){
+        this.street = street;
+        this.number = number;
+        this.company = company;
+    }
 }

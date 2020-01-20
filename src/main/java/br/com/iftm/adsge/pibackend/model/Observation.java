@@ -1,7 +1,6 @@
 package br.com.iftm.adsge.pibackend.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +9,10 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Observation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,5 +25,10 @@ public class Observation {
             @JoinColumn(name = "user_id", nullable = false),
             @JoinColumn(name = "implantation_id", nullable = false)
     })
-    private ModuleImplantation modulesImplantation;
+    private ModuleImplantation moduleImplantation;
+
+    public Observation(String description, ModuleImplantation module){
+        this.description = description;
+        this.moduleImplantation = module;
+    }
 }
