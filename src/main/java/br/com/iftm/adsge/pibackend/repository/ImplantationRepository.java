@@ -2,8 +2,12 @@ package br.com.iftm.adsge.pibackend.repository;
 
 import br.com.iftm.adsge.pibackend.model.Implantation;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
-public interface ImplantationRepository extends JpaRepository<Implantation, Integer> {
+import java.util.List;
+
+@Repository
+public interface ImplantationRepository extends JpaRepository<Implantation, Long> {
+
+    List<Implantation> findAllByCompanyDocument(String document);
 }

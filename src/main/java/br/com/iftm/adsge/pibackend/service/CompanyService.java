@@ -19,4 +19,9 @@ public class CompanyService {
         List<Company> list = repository.findAll();
         return list.stream().map(e -> new CompanyDTO(e)).collect(Collectors.toList());
     }
+
+    public Company save(CompanyDTO dto){
+        return repository.save(dto.toEntity());
+    }
+
 }

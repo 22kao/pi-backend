@@ -32,13 +32,17 @@ public class CompanyDTO {
     }
 
     public Company toEntity() {
-        return Company.builder()
+        Company company = Company.builder()
                 .id(id)
+                .name(name)
                 .document(document)
                 .email(email)
-                .address(address.toEntity())
                 .phones(phones.stream()
                         .map(e -> e.toEntity())
                         .collect(Collectors.toList())).build();
+        if(address != null)
+            company.setAddress(address.toEntity());
+
+        return company;
     }
 }
