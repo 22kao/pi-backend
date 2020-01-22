@@ -5,7 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -22,27 +24,25 @@ public class Company {
     @NotBlank(message = "Company name cannot be blank")
     private String name;
 
-    @NotBlank(message = "Company cnpj cannot be blank")
-    private String cnpj;
+    @NotBlank(message = "Company document cannot be blank")
+    private String document;
 
     @Email(message = "Email should be valid")
     private String email;
 
     @Builder.Default
-    @Transient
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private Set<Phone> phones = new HashSet<>();
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Phone> phones = new ArrayList<>();
 
-    @Transient
-    @ToString.Exclude
     @OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
     private Address address;
 
-    @OneToOne(mappedBy = "company")
-    private Implantation implantation;
+    @Builder.Default
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    private Set<Implantation> implantations = new HashSet<>();
 
-    public Company(String name, String cnpj){
+    public Company(String name, String document){
         this.name = name;
-        this.cnpj = cnpj;
+        this.document = document;
     }
 }

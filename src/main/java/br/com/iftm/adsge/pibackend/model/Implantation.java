@@ -40,7 +40,7 @@ public class Implantation {
     @OneToMany(mappedBy = "implantation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<ModuleImplantation> modulesImplantation = new HashSet<>();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
 

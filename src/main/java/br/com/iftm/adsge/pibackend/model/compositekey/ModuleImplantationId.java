@@ -1,4 +1,4 @@
-package br.com.iftm.adsge.pibackend.model.pk;
+package br.com.iftm.adsge.pibackend.model.compositekey;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

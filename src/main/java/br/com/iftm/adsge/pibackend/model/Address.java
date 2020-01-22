@@ -1,5 +1,6 @@
 package br.com.iftm.adsge.pibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Address {
     @NotBlank(message = "Address street cannot be blank")
     private String street;
 
+    @NotBlank(message = "Address city cannot be blank")
     private String city;
 
     private String state;
@@ -31,9 +33,12 @@ public class Address {
 
     @OneToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Company company;
 
-    public Address(String street, Integer number, Company company){
+    public Address(String city, String street, Integer number, Company company){
+        this.city = city;
         this.street = street;
         this.number = number;
         this.company = company;

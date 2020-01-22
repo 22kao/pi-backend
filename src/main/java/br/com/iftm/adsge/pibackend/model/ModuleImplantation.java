@@ -1,12 +1,10 @@
 package br.com.iftm.adsge.pibackend.model;
 
 import br.com.iftm.adsge.pibackend.model.enums.ProgressStatus;
-import br.com.iftm.adsge.pibackend.model.pk.ModuleImplantationId;
-import com.sun.org.apache.xpath.internal.operations.Mod;
+import br.com.iftm.adsge.pibackend.model.compositekey.ModuleImplantationId;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 import java.util.List;

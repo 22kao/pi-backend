@@ -1,5 +1,6 @@
 package br.com.iftm.adsge.pibackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,5 +23,7 @@ public class Phone {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Company company;
 }

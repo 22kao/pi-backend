@@ -72,14 +72,14 @@ public class TestConfig implements CommandLineRunner {
         companyRepository.saveAll(Arrays.asList(c1, c2, c3, c4, c5));
 
         //Address
-        Address ad1 = new Address("Street Cax", 451, c1);
-        Address ad2 = new Address("Street Duq", 145, c1);
-        Address ad3 = new Address("Street Joa", 1653, c3);
-        Address ad4 = new Address("Street Cat", 452, c2);
-        Address ad5 = new Address("Street Arl", 985, c4);
-        Address ad6 = new Address("Street Gom", 1201, c5);
+        //Address ad1 = new Address("Street Cax", 451, c1);
+        //Address ad2 = new Address("Street Duq", 145, c1);
+        Address ad3 = new Address("JoaCity","Street Joa", 1653, c3);
+        Address ad4 = new Address("CatCity","Street Cat", 452, c2);
+        Address ad5 = new Address("ArlCity","Street Arl", 985, c4);
+        Address ad6 = new Address("GomCity","Street Gom", 1201, c5);
 
-        addressRepository.saveAll(Arrays.asList(ad1, ad2, ad3, ad4, ad5, ad6));
+        addressRepository.saveAll(Arrays.asList(/*ad1, ad2,*/ ad3, ad4, ad5, ad6));
 
         //Phones
         Phone p2 = new Phone(null, "34985562233", "Edward", c1);
@@ -87,9 +87,10 @@ public class TestConfig implements CommandLineRunner {
         Phone p3 = new Phone(null, "34954565333", "Alphonse", c3);
         Phone p4 = new Phone(null, "34948785511", "Kile", c1);
         Phone p5 = new Phone(null, "34969852234", "Gon", c4);
-        Phone p6 = new Phone(null, "34923214455", "Kur", c5);
+        //todo testar criação de telefone sem empresa
+        //Phone p6 = new Phone(null, "34923214455", "Kur", c5);
 
-        phoneRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6));
+        phoneRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5/*, p6*/));
 
         //Implantation
         Implantation imp1 = new Implantation("Implantation 1",c1);
