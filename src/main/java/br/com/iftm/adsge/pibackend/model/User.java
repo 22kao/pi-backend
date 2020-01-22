@@ -29,6 +29,7 @@ public class User {
 
     private String password;
 
+    @Builder.Default
     @Transient
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ModuleImplantation> modulesImplantation = new HashSet<>();

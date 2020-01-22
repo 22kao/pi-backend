@@ -18,5 +18,5 @@ public class ModuleImplantationId implements Serializable {
     private Integer userId;
 
     @Column(name = "implantation_id")
-    private Integer implantationId;
+    private Long implantationId;
 }

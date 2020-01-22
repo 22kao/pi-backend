@@ -14,11 +14,13 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Implantation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @EqualsAndHashCode.Include
+    private Long id;
 
     private String description;
 
@@ -38,19 +40,23 @@ public class Implantation {
     @Transient
     @Builder.Default
     @OneToMany(mappedBy = "implantation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Set<ModuleImplantation> modulesImplantation = new HashSet<>();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Company company;
 
-    public Implantation(String description, Company company){
+    public Implantation(String description, Company company, LocalDateTime dtExpected){
         this.description = description;
         this.status = ProgressStatus.IN_PROGRESS;
         this.dtInitial = LocalDateTime.now();
         this.company = company;
+        this.dtExpected = dtExpected;
     }
 
+    //todo alterar criaçaõ de progress status e dtinitial para o serviço de adição de uma nova implantação
     //todo acrescentar método para adicionar um módulo a esta implantação
     //todo quando o expected alterar a data, a data anterior será adicionada ao expectedInitial
 }
