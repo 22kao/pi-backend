@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,7 +18,6 @@ import java.util.stream.Collectors;
 public class CompanyService {
 
     private final CompanyRepository repository;
-    private final AddressRepository addressRepository;
 
     public List<CompanyFullDTO> findAll() {
         List<Company> list = repository.findAll();
@@ -26,22 +26,16 @@ public class CompanyService {
 
     //todo testar um findid que não exista
 
-    public CompanyFullDTO findById(Integer id){
-        return new CompanyFullDTO(repository.findById(id).get());
+    public CompanyFullDTO findById(Integer id) {
+        Optional<Company> company = repository.findById(id);
+        return new CompanyFullDTO(company.orElseThrow(() -> new NullPointerException("")));
+        //todo criar exceção
     }
 
     public CompanyDTO save(CompanyFullDTO dto) {
         Company company = dto.toEntity();
-        setCompanyAddress(company, dto.getAddress());
         repository.save(company);
         return new CompanyDTO(company);
-    }
-
-    private void setCompanyAddress(Company company, Address address) {
-        if(address != null){
-            address.setCompany(company);
-            company.setAddress(address);
-        }
     }
 
 }
