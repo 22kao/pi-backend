@@ -15,6 +15,11 @@ public class PhoneDTO {
     @JsonIgnore
     private Company company;
 
+    public PhoneDTO(String phone, String username) {
+        this.phone = phone;
+        this.username = username;
+    }
+
     public PhoneDTO(Phone phone) {
         this.phone = phone.getPhone();
         this.username = phone.getUsername();

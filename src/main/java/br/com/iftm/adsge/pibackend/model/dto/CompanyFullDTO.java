@@ -2,11 +2,10 @@ package br.com.iftm.adsge.pibackend.model.dto;
 
 import br.com.iftm.adsge.pibackend.model.Address;
 import br.com.iftm.adsge.pibackend.model.Company;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyDTO {
+public class CompanyFullDTO {
 
     private Integer id;
     private String name;
@@ -24,11 +23,16 @@ public class CompanyDTO {
     private Address address;
     private List<PhoneDTO> phones = new ArrayList<>();
 
-    public CompanyDTO(Company company) {
+    public CompanyFullDTO(Company company) {
         this.id = company.getId();
         this.name = company.getName();
         this.document = company.getDocument();
         this.email = company.getEmail();
+
+        if(company.getAddress() != null)
+            this.address = company.getAddress();
+
+        this.phones = company.getPhones().stream().map(e -> new PhoneDTO(e)).collect(Collectors.toList());
     }
 
     public Company toEntity() {
@@ -37,6 +41,12 @@ public class CompanyDTO {
                 .name(name)
                 .document(document)
                 .email(email).build();
+
+        if(!phones.isEmpty())
+            company.setPhones(phones.stream().map(e -> e.toEntity()).collect(Collectors.toList()));
+
+        //if(address != null)
+          //  company.setAddress(address);
 
         return company;
     }

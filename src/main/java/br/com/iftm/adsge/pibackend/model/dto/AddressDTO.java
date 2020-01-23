@@ -13,7 +13,13 @@ public class AddressDTO {
     private String street;
     private Integer number;
     @JsonIgnore
-    private CompanyDTO company;
+    private CompanyFullDTO company;
+
+    public AddressDTO(String city, String street, Integer number) {
+        this.city = city;
+        this.street = street;
+        this.number = number;
+    }
 
     public AddressDTO(Address address) {
         this.city = address.getCity();

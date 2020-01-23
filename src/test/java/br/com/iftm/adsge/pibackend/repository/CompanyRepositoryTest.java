@@ -1,7 +1,6 @@
 package br.com.iftm.adsge.pibackend.repository;
 
 import br.com.iftm.adsge.pibackend.model.Company;
-import br.com.iftm.adsge.pibackend.model.dto.CompanyDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

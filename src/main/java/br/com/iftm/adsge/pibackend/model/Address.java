@@ -35,6 +35,7 @@ public class Address {
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Company company;
 
     public Address(String city, String street, Integer number, Company company){
