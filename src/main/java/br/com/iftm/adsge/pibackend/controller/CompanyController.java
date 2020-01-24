@@ -30,10 +30,23 @@ public class CompanyController {
 
     @PostMapping
     public ResponseEntity<CompanyDTO> insert(@RequestBody CompanyFullDTO dto) {
-        CompanyDTO newDto = service.save(dto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newDto.getId()).toUri();
-        return ResponseEntity.created(location).body(newDto);
+        CompanyDTO newCompany = service.save(dto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCompany.getId()).toUri();
+        return ResponseEntity.created(location).body(newCompany);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CompanyFullDTO> update(@PathVariable Integer id, @RequestBody CompanyFullDTO dto){
+        CompanyFullDTO updatedCompany = service.update(id, dto);
+        return ResponseEntity.ok().body(updatedCompany);
+    }
+
 
     //todo address controller para adição de de endereço no cnpj informado
     //todo phones controller para adição de telefone no cpnj informado

@@ -37,7 +37,7 @@ public class Company {
     private List<Phone> phones = new ArrayList<>();
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL, optional = true)
+    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
     private Address address;
 
     @ToString.Exclude
