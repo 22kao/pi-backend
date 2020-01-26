@@ -2,6 +2,7 @@ package br.com.iftm.adsge.pibackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,7 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
     private Integer id;
 
     private String cep;
@@ -35,6 +37,7 @@ public class Address {
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Company company;
 
     public Address(String city, String street, Integer number, Company company){

@@ -1,7 +1,8 @@
 package br.com.iftm.adsge.pibackend.controller;
 
+import br.com.iftm.adsge.pibackend.model.Address;
+import br.com.iftm.adsge.pibackend.model.dto.AddressDTO;
 import br.com.iftm.adsge.pibackend.model.dto.CompanyDTO;
-import br.com.iftm.adsge.pibackend.model.dto.CompanyFullDTO;
 import br.com.iftm.adsge.pibackend.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +20,17 @@ public class CompanyController {
     private final CompanyService service;
 
     @GetMapping
-    public ResponseEntity<List<CompanyFullDTO>> findAll() {
+    public ResponseEntity<List<CompanyDTO>> findAll() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<CompanyFullDTO> findById(@PathVariable Integer id) {
+    public ResponseEntity<CompanyDTO> findById(@PathVariable Integer id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<CompanyDTO> insert(@RequestBody CompanyFullDTO dto) {
+    public ResponseEntity<CompanyDTO> insert(@RequestBody CompanyDTO dto) {
         CompanyDTO newCompany = service.save(dto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCompany.getId()).toUri();
         return ResponseEntity.created(location).body(newCompany);
@@ -42,9 +43,8 @@ public class CompanyController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<CompanyFullDTO> update(@PathVariable Integer id, @RequestBody CompanyFullDTO dto){
-        CompanyFullDTO updatedCompany = service.update(id, dto);
-        return ResponseEntity.ok().body(updatedCompany);
+    public ResponseEntity<CompanyDTO> update(@PathVariable Integer id, @RequestBody CompanyDTO dto){
+        return ResponseEntity.ok().body(service.update(id, dto));
     }
 
 

@@ -1,6 +1,5 @@
 package br.com.iftm.adsge.pibackend.controller;
 
-import br.com.iftm.adsge.pibackend.model.dto.ImplantationDTO;
 import br.com.iftm.adsge.pibackend.service.ImplantationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +16,4 @@ import java.util.List;
 public class ImplantationController {
 
     private final ImplantationService service;
-
-    @GetMapping(value = "/company/{document}")
-    public ResponseEntity<List<ImplantationDTO>> findAllByCompanyDocument(@PathVariable String document){
-        return ResponseEntity.ok().body(service.findAllByCompanyDocument(document));
-    }
 }

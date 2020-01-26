@@ -49,9 +49,4 @@ public class Company {
         this.name = name;
         this.document = document;
     }
-
-    public Optional<Address> getAddress(){
-        return Optional.ofNullable(address);
-    }
-
 }

@@ -1,7 +1,6 @@
 package br.com.iftm.adsge.pibackend.service;
 
 import br.com.iftm.adsge.pibackend.model.Implantation;
-import br.com.iftm.adsge.pibackend.model.dto.ImplantationDTO;
 import br.com.iftm.adsge.pibackend.repository.ImplantationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,8 @@ public class ImplantationService {
 
     private final ImplantationRepository repository;
 
-    public List<ImplantationDTO> findAllByCompanyDocument(String document) {
+    /*public List<ImplantationDTO> findAllByCompanyDocument(String document) {
         List<Implantation> list = repository.findAllByCompanyDocument(document);
         return list.stream().map(e -> new ImplantationDTO(e)).collect(Collectors.toList());
-    }
+    }*/
 }

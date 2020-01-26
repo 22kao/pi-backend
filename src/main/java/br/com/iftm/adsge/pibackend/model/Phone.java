@@ -14,6 +14,7 @@ public class Phone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     @NotBlank(message = "Phone cannot be blank")
@@ -25,5 +26,6 @@ public class Phone {
     @JoinColumn(name = "company_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Company company;
 }

@@ -1,6 +1,7 @@
 package br.com.iftm.adsge.pibackend.model;
 
 import br.com.iftm.adsge.pibackend.model.enums.ProgressStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
