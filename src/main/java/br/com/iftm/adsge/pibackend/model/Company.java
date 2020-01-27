@@ -17,7 +17,6 @@ public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Integer id;
 
     @NotBlank(message = "Company name cannot be blank")

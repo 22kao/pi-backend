@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PhoneDTO {
+public class PhoneCompany {
 
     private Long id;
     private String phone;
@@ -16,7 +16,7 @@ public class PhoneDTO {
     private Integer companyId;
     private String companyName;
 
-    public PhoneDTO(Phone phone) {
+    public PhoneCompany(Phone phone) {
         if(phone.getCompany() == null)
             throw new IllegalArgumentException("Error instantiating PhoneDTO: Company was null");
 

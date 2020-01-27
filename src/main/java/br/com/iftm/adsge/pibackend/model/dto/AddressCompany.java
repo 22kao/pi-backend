@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AddressDTO {
+public class AddressCompany {
 
     private Integer id;
     private String cep;
@@ -19,7 +19,7 @@ public class AddressDTO {
     private Integer companyId;
     private String companyName;
 
-    public AddressDTO(Address address) {
+    public AddressCompany(Address address) {
         if(address.getCompany() == null)
             throw  new IllegalArgumentException("Error instantiating AddressDTO: Company was null");
 

@@ -6,20 +6,20 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CompanyDTO {
+public class CompanyBasic {
     private Integer id;
     private String name;
     private String document;
     private String email;
 
-    public CompanyDTO(Integer id, String name, String document, String email) {
+    public CompanyBasic(Integer id, String name, String document, String email) {
         this.id = id;
         this.name = name;
         this.document = document;
         this.email = email;
     }
 
-    public CompanyDTO(Company company) {
+    public CompanyBasic(Company company) {
         this.id = company.getId();
         this.name = company.getName();
         this.document = company.getDocument();
