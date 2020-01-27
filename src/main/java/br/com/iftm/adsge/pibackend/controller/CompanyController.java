@@ -2,6 +2,7 @@ package br.com.iftm.adsge.pibackend.controller;
 
 import br.com.iftm.adsge.pibackend.model.Phone;
 import br.com.iftm.adsge.pibackend.model.dto.CompanyBasic;
+import br.com.iftm.adsge.pibackend.model.dto.CompanyDetailed;
 import br.com.iftm.adsge.pibackend.model.dto.PhoneCompany;
 import br.com.iftm.adsge.pibackend.service.CompanyService;
 import br.com.iftm.adsge.pibackend.service.PhoneService;
@@ -64,4 +65,26 @@ public class CompanyController {
 
     //todo address controller para adição de de endereço no cnpj informado
     //todo phones controller para adição de telefone no cpnj informado
+
+    @GetMapping(value = "/detailed")
+    public ResponseEntity<List<CompanyDetailed>> findAllDetailed() {
+        return ResponseEntity.ok().body(service.findAllDetailed());
+    }
+
+    @GetMapping(value = "/detailed/{id}")
+    public ResponseEntity<CompanyDetailed> findDetailedById(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(service.findDetailedById(id));
+    }
+
+    @PostMapping(value = "/detailed")
+    public ResponseEntity<CompanyDetailed> insertDetailed(@RequestBody CompanyDetailed dto) {
+        CompanyDetailed newCompany = service.saveDetailed(dto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCompany.getId()).toUri();
+        return ResponseEntity.created(location).body(newCompany);
+    }
+
+    @PutMapping(value = "/detailed/{id}")
+    public ResponseEntity<CompanyDetailed> updateDetailed(@PathVariable Integer id, @RequestBody CompanyDetailed dto){
+        return ResponseEntity.ok().body(service.updateDetailed(id, dto));
+    }
 }

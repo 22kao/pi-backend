@@ -1,8 +1,11 @@
 package br.com.iftm.adsge.pibackend.service;
 
+import br.com.iftm.adsge.pibackend.model.Address;
 import br.com.iftm.adsge.pibackend.model.Company;
 import br.com.iftm.adsge.pibackend.model.Phone;
 import br.com.iftm.adsge.pibackend.model.dto.CompanyBasic;
+import br.com.iftm.adsge.pibackend.model.dto.CompanyDetailed;
+import br.com.iftm.adsge.pibackend.repository.AddressRepository;
 import br.com.iftm.adsge.pibackend.repository.CompanyRepository;
 import br.com.iftm.adsge.pibackend.service.exceptions.DatabaseException;
 import br.com.iftm.adsge.pibackend.service.exceptions.ResourceNotFoundException;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
 public class CompanyService {
 
     private final CompanyRepository repository;
+    private final AddressRepository addressRepository;
 
     public List<CompanyBasic> findAll() {
         List<Company> list = repository.findAll();
@@ -29,9 +34,10 @@ public class CompanyService {
     }
 
     public CompanyBasic findById(Integer id) {
-        Optional<Company> company = repository.findById(id);
-        return new CompanyBasic(
-                company.orElseThrow(() -> new ResourceNotFoundException(String.format("Company id %s not found", id))));
+        Optional<Company> obj = repository.findById(id);
+        Company company = obj.orElseThrow(() ->
+                new ResourceNotFoundException(String.format("Company id %s not found", id)));
+        return new CompanyBasic(company);
     }
 
     @Transactional
@@ -65,21 +71,77 @@ public class CompanyService {
 
     @Transactional
     public List<Phone> addPhoneList(Integer id, List<Phone> phones) {
-        try{
+        try {
             Company company = repository.getOne(id);
             setPhoneList(company, phones);
             return repository.save(company).getPhones();
-        } catch (EntityNotFoundException e){
-            throw new ResourceNotFoundException(String.format("Company id %s not found",id));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Company id %s not found", id));
         }
     }
 
     private void setPhoneList(Company company, List<Phone> phones) {
         company.getPhones().clear();
-        for(Phone phone : phones){
+        for (Phone phone : phones) {
             phone.setId(null);
             phone.setCompany(company);
             company.getPhones().add(phone);
         }
+    }
+
+    public List<CompanyDetailed> findAllDetailed() {
+        List<Company> list = repository.findAll();
+        List<CompanyDetailed> detailedList = new ArrayList<>();
+        for(Company company : list){
+            detailedList.add(createCompanyDetailed(company));
+        }
+        return detailedList;
+    }
+
+    public CompanyDetailed findDetailedById(Integer id) {
+        Optional<Company> obj = repository.findById(id);
+        Company company = obj.orElseThrow(() ->
+                new ResourceNotFoundException(String.format("Company id %s not found",id )));
+        return createCompanyDetailed(company);
+    }
+
+    @Transactional
+    public CompanyDetailed saveDetailed(CompanyDetailed dto) {
+        Company company = dto.toEntity();
+        if(dto.getAddress() != null){
+            dto.getAddress().setCompany(company);
+            company.setAddress(dto.getAddress());
+        }
+        for(Phone phone : dto.getPhones()){
+            phone.setCompany(company);
+            company.getPhones().add(phone);
+        }
+        return createCompanyDetailed(repository.save(company));
+    }
+
+    @Transactional
+    public CompanyDetailed updateDetailed(Integer id, CompanyDetailed dto) {
+        try {
+            //TODO verificar se um novo endereço está sendo salvo ou sendo editado, mesma coisa para os telefones
+            Company company = repository.getOne(id);
+            if(dto.getAddress() != null){
+                company.setAddress(dto.getAddress());
+                company.getAddress().setCompany(company);
+            }
+            for(Phone phone : dto.getPhones()){
+                phone.setCompany(company);
+                company.getPhones().add(phone);
+            }
+            return createCompanyDetailed(repository.save(company));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Company id %s not found", id));
+        }
+    }
+
+    private CompanyDetailed createCompanyDetailed(Company company) {
+        CompanyDetailed dto = new CompanyDetailed(company);
+        dto.setAddress(company.getAddress());
+        dto.setPhones(company.getPhones());
+        return dto;
     }
 }
