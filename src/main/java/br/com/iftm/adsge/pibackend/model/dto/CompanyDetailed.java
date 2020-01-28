@@ -5,6 +5,7 @@ import br.com.iftm.adsge.pibackend.model.Company;
 import br.com.iftm.adsge.pibackend.model.Phone;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CompanyDetailed {
 
     private Integer id;

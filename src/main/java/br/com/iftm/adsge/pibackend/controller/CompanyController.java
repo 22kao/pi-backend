@@ -3,9 +3,7 @@ package br.com.iftm.adsge.pibackend.controller;
 import br.com.iftm.adsge.pibackend.model.Phone;
 import br.com.iftm.adsge.pibackend.model.dto.CompanyBasic;
 import br.com.iftm.adsge.pibackend.model.dto.CompanyDetailed;
-import br.com.iftm.adsge.pibackend.model.dto.PhoneCompany;
 import br.com.iftm.adsge.pibackend.service.CompanyService;
-import br.com.iftm.adsge.pibackend.service.PhoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +18,6 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService service;
-    private final PhoneService phoneService;
 
     @GetMapping
     public ResponseEntity<List<CompanyBasic>> findAll() {
@@ -52,8 +49,8 @@ public class CompanyController {
 
     //Phone's Company
     @GetMapping(value = "/{id}/phones")
-    public ResponseEntity<List<Phone>> findAllPhonesByCompanyId(@PathVariable Integer id){
-        return ResponseEntity.ok(phoneService.findAllByCompanyId(id));
+    public ResponseEntity<List<Phone>> findAllPhones(@PathVariable Integer id){
+        return ResponseEntity.ok(service.findAllPhones(id));
     }
 
     @PostMapping(value = "/{id}/phones")
@@ -63,9 +60,7 @@ public class CompanyController {
         return ResponseEntity.created(location).body(newPhones);
     }
 
-    //todo address controller para adição de de endereço no cnpj informado
-    //todo phones controller para adição de telefone no cpnj informado
-
+    //Detailed Companies
     @GetMapping(value = "/detailed")
     public ResponseEntity<List<CompanyDetailed>> findAllDetailed() {
         return ResponseEntity.ok().body(service.findAllDetailed());
@@ -78,9 +73,9 @@ public class CompanyController {
 
     @PostMapping(value = "/detailed")
     public ResponseEntity<CompanyDetailed> insertDetailed(@RequestBody CompanyDetailed dto) {
-        CompanyDetailed newCompany = service.saveDetailed(dto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCompany.getId()).toUri();
-        return ResponseEntity.created(location).body(newCompany);
+        CompanyDetailed company = service.saveDetailed(dto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(company.getId()).toUri();
+        return ResponseEntity.created(location).body(company);
     }
 
     @PutMapping(value = "/detailed/{id}")

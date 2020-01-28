@@ -32,11 +32,11 @@ public class Company {
 
     @ToString.Exclude
     @Builder.Default
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Phone> phones = new ArrayList<>();
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
 
     @ToString.Exclude

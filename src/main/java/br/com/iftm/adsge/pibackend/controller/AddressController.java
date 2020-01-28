@@ -34,6 +34,8 @@ public class AddressController {
         return ResponseEntity.created(location).body(newDto);
     }
 
+    //todo alterar para id do telefone, o id da compania será no endpoint company
+
     @PutMapping(value = "/company/{id}")
     public ResponseEntity<AddressCompany> update(@PathVariable Integer companyId, @RequestBody AddressCompany dto){
         return ResponseEntity.ok().body(service.update(companyId, dto));

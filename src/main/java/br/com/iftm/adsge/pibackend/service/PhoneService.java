@@ -36,10 +36,6 @@ public class PhoneService {
         return new PhoneCompany(phone);
     }
 
-    public List<Phone> findAllByCompanyId(Integer companyId) {
-        return repository.findAllByCompanyId(companyId);
-    }
-
     @Transactional
     public PhoneCompany update(Long id, PhoneCompany dto) {
         Phone phone = repository.getOne(id);
