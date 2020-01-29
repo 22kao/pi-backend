@@ -103,7 +103,7 @@ public class CompanyRepositoryTest {
     }
 
     @Test
-    void companyAddress_andSavedAddress_ShouldBeEquals(){
+    void companyAddressAndSavedAddress_ShouldBeEquals(){
         Company company = Company.builder()
                 .name("Company1")
                 .document("12245678991245")
@@ -129,7 +129,7 @@ public class CompanyRepositoryTest {
     }
 
     @Test
-    void companyPhones_andSavedPhones_ShouldBeEquals(){
+    void companyPhoneAndSavedPhones_ShouldBeEquals(){
         Company company = Company.builder()
                 .name("Company1")
                 .document("12245678991245")

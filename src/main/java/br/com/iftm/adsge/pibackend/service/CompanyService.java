@@ -14,17 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.RollbackException;
 import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,22 +29,43 @@ public class CompanyService {
     private final AddressRepository addressRepository;
     private final PhoneRepository phoneRepository;
 
-    public List<CompanyBasic> findAll() {
+    public List<CompanyDetailed> findAll() {
         List<Company> list = repository.findAll();
-        return list.stream().map(e -> new CompanyBasic(e)).collect(Collectors.toList());
+        List<CompanyDetailed> detailedList = new ArrayList<>();
+        for (Company company : list) {
+            detailedList.add(createCompanyDetailed(company));
+        }
+        return detailedList;
     }
 
-    public CompanyBasic findById(Integer id) {
+    public CompanyDetailed findById(Integer id) {
         Optional<Company> obj = repository.findById(id);
         Company company = obj.orElseThrow(() ->
                 new ResourceNotFoundException(String.format("Company id %s not found", id)));
-        return new CompanyBasic(company);
+        return createCompanyDetailed(company);
     }
 
     @Transactional
-    public CompanyBasic save(CompanyBasic dto) {
-        Company company = repository.save(dto.toEntity());
-        return new CompanyBasic(company);
+    public CompanyDetailed save(CompanyDetailed dto) {
+        Company company = dto.toEntity();
+        setAddress(company, dto.getAddress());
+        setPhoneList(company, dto.getPhones());
+        return createCompanyDetailed(repository.save(company));
+    }
+
+    @Transactional
+    public CompanyDetailed update(Integer id, CompanyDetailed dto) {
+        try {
+            Company company = repository.getOne(id);
+            company.setName(dto.getName());
+            company.setDocument(dto.getDocument());
+            company.setEmail(dto.getEmail());
+            updateAddress(company, dto.getAddress());
+            updatePhones(company, dto.getPhones());
+            return createCompanyDetailed(repository.save(company));
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Company id %s not found", id));
+        }
     }
 
     public void delete(Integer id) {
@@ -63,63 +79,11 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyBasic update(Integer id, CompanyBasic dto) {
-        try {
-            Company company = repository.getOne(id);
-            company.setName(dto.getName());
-            company.setDocument(dto.getDocument());
-            company.setEmail(dto.getEmail());
-            return new CompanyBasic(repository.save(company));
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Company id %s not found", id));
-        }
-    }
-
-    @Transactional
     public List<Phone> addPhoneList(Integer id, List<Phone> phones) {
         try {
             Company company = repository.getOne(id);
             setPhoneList(company, phones);
             return repository.save(company).getPhones();
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Company id %s not found", id));
-        }
-    }
-
-    public List<CompanyDetailed> findAllDetailed() {
-        List<Company> list = repository.findAll();
-        List<CompanyDetailed> detailedList = new ArrayList<>();
-        for (Company company : list) {
-            detailedList.add(createCompanyDetailed(company));
-        }
-        return detailedList;
-    }
-
-    public CompanyDetailed findDetailedById(Integer id) {
-        Optional<Company> obj = repository.findById(id);
-        Company company = obj.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("Company id %s not found", id)));
-        return createCompanyDetailed(company);
-    }
-
-    @Transactional
-    public CompanyDetailed saveDetailed(CompanyDetailed dto) {
-        Company company = dto.toEntity();
-        setAddress(company, dto.getAddress());
-        setPhoneList(company, dto.getPhones());
-        return createCompanyDetailed(repository.save(company));
-    }
-
-    @Transactional
-    public CompanyDetailed updateDetailed(Integer id, CompanyDetailed dto) {
-        try {
-            Company company = repository.getOne(id);
-            company.setName(dto.getName());
-            company.setDocument(dto.getDocument());
-            company.setEmail(dto.getEmail());
-            updateAddress(company, dto.getAddress());
-            updatePhones(company, dto.getPhones());
-            return createCompanyDetailed(repository.save(company));
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Company id %s not found", id));
         }

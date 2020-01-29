@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CompanyDetailed {
 
+
     private Integer id;
     private String name;
     private String document;
