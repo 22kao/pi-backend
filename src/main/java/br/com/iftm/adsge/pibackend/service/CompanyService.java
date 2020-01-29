@@ -19,6 +19,7 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.RollbackException;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
