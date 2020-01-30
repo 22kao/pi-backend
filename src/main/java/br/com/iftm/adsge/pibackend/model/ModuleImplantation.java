@@ -2,6 +2,7 @@ package br.com.iftm.adsge.pibackend.model;
 
 import br.com.iftm.adsge.pibackend.model.enums.ProgressStatus;
 import br.com.iftm.adsge.pibackend.model.compositekey.ModuleImplantationId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class ModuleImplantation {
 
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Module module;
 
     @Enumerated(value = EnumType.STRING)

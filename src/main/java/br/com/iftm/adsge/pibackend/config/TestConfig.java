@@ -102,11 +102,10 @@ public class TestConfig implements CommandLineRunner {
         phoneRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6));
 
         //Implantation
-        LocalDateTime expectedDate = LocalDateTime.of(2020, Month.JULY, 25, 15, 10);
-        Implantation imp1 = new Implantation("Implantation 1", c1, expectedDate);
-        Implantation imp2 = new Implantation("Implantation 1", c2, expectedDate.plusMonths(2));
-        Implantation imp3 = new Implantation("Implantation 1", c3, expectedDate.plusDays(20));
-        Implantation imp4 = new Implantation("Implantation 2", c1, expectedDate.plusYears(1));
+        Implantation imp1 = new Implantation("Implantation 1", c1);
+        Implantation imp2 = new Implantation("Implantation 2", c2);
+        Implantation imp3 = new Implantation("Implantation 3", c3);
+        Implantation imp4 = new Implantation("Implantation 4", c1);
 
         implantationRepository.saveAll(Arrays.asList(imp1, imp2, imp3, imp4));
 

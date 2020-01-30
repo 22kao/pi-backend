@@ -3,7 +3,6 @@ package br.com.iftm.adsge.pibackend.service;
 import br.com.iftm.adsge.pibackend.model.Address;
 import br.com.iftm.adsge.pibackend.model.Company;
 import br.com.iftm.adsge.pibackend.model.Phone;
-import br.com.iftm.adsge.pibackend.model.dto.CompanyBasic;
 import br.com.iftm.adsge.pibackend.model.dto.CompanyDetailed;
 import br.com.iftm.adsge.pibackend.repository.AddressRepository;
 import br.com.iftm.adsge.pibackend.repository.CompanyRepository;
@@ -79,7 +78,7 @@ public class CompanyService {
     }
 
     @Transactional
-    public List<Phone> addPhoneList(Integer id, List<Phone> phones) {
+    public List<Phone> setPhoneList(Integer id, List<Phone> phones) {
         try {
             Company company = repository.getOne(id);
             setPhoneList(company, phones);
@@ -87,10 +86,6 @@ public class CompanyService {
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Company id %s not found", id));
         }
-    }
-
-    public List<Phone> findAllPhones(Integer companyId) {
-        return phoneRepository.findAllByCompanyId(companyId);
     }
 
     private void setPhoneList(Company company, List<Phone> phones) {
@@ -138,4 +133,5 @@ public class CompanyService {
         address.setCep(newAddress.getCep());
         addressRepository.save(address);
     }
+
 }

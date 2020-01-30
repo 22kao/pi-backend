@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -23,22 +24,20 @@ public class Implantation {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank(message = "Implantation's description cannot be blank")
     private String description;
 
     private LocalDateTime dtExpectedInitial;
 
     private LocalDateTime dtExpected;
 
-    @PastOrPresent(message = "Implantation realized date cannot be in the future")
     private LocalDateTime dtRealized;
 
-    @PastOrPresent(message = "Implantation initial date cannot be in the future")
     private LocalDateTime dtInitial;
 
     @Enumerated(value = EnumType.STRING)
     private ProgressStatus status;
 
-    @Transient
     @Builder.Default
     @OneToMany(mappedBy = "implantation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
@@ -49,12 +48,11 @@ public class Implantation {
     @ToString.Exclude
     private Company company;
 
-    public Implantation(String description, Company company, LocalDateTime dtExpected){
+    public Implantation(String description, Company company){
         this.description = description;
         this.status = ProgressStatus.IN_PROGRESS;
         this.dtInitial = LocalDateTime.now();
         this.company = company;
-        this.dtExpected = dtExpected;
     }
 
     //todo alterar criaçaõ de progress status e dtinitial para o serviço de adição de uma nova implantação

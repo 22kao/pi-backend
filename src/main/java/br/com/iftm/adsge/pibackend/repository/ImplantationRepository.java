@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ImplantationRepository extends JpaRepository<Implantation, Long> {
 
-    List<Implantation> findAllByCompanyDocument(String document);
+    List<Implantation> findAllByCompanyId(Integer id);
 }

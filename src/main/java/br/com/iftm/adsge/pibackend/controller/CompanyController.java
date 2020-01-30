@@ -47,15 +47,11 @@ public class CompanyController {
     }
 
     //Phone's Company
-    @GetMapping(value = "/{id}/phones")
-    public ResponseEntity<List<Phone>> findAllPhones(@PathVariable Integer id){
-        return ResponseEntity.ok(service.findAllPhones(id));
-    }
-
     @PostMapping(value = "/{id}/phones")
-    public ResponseEntity<List<Phone>> addPhoneList(@PathVariable Integer id, @RequestBody List<Phone> phones){
-        List<Phone> newPhones = service.addPhoneList(id, phones);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(id).toUri();
+    public ResponseEntity<List<Phone>> setPhoneList(@PathVariable Integer companyId, @RequestBody List<Phone> phones){
+        List<Phone> newPhones = service.setPhoneList(companyId, phones);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(companyId).toUri();
         return ResponseEntity.created(location).body(newPhones);
     }
 }

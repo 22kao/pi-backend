@@ -44,7 +44,6 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<StandardError> general(Exception e, HttpServletRequest request){
-
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         StandardError standardError = StandardError.builder()
                 .status(status.value())
@@ -69,6 +68,9 @@ public class RestExceptionHandler {
 
         return ResponseEntity.status(status).body(standardError);
     }
+
+    //todo Make one with MethodArgumentNotValidException
+    //getBindingResult.errors[]. foreach -> defaultMessage
 
 
 }
