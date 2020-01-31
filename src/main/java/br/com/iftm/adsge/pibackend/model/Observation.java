@@ -25,10 +25,10 @@ public class Observation {
             @JoinColumn(name = "user_id", nullable = false),
             @JoinColumn(name = "implantation_id", nullable = false)
     })
-    private ModuleImplantation moduleImplantation;
+    private ImplantationModule implantationModule;
 
-    public Observation(String description, ModuleImplantation module){
+    public Observation(String description, ImplantationModule module){
         this.description = description;
-        this.moduleImplantation = module;
+        this.implantationModule = module;
     }
 }

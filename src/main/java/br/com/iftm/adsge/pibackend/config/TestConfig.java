@@ -2,18 +2,13 @@ package br.com.iftm.adsge.pibackend.config;
 
 import br.com.iftm.adsge.pibackend.model.*;
 import br.com.iftm.adsge.pibackend.model.Module;
-import br.com.iftm.adsge.pibackend.model.enums.ProgressStatus;
 import br.com.iftm.adsge.pibackend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.HashSet;
 
 @Configuration
 @Profile("test")
@@ -117,9 +112,9 @@ public class TestConfig implements CommandLineRunner {
         moduleRepository.saveAll(Arrays.asList(m1, m2, m3));
 
         //Modules Implantation
-        ModuleImplantation mi1 = new ModuleImplantation(u1, imp1, m1);
-        ModuleImplantation mi2 = new ModuleImplantation(u2, imp2, m2);
-        ModuleImplantation mi3 = new ModuleImplantation(u1, imp2, m3);
+        ImplantationModule mi1 = new ImplantationModule(u1, imp1, m1);
+        ImplantationModule mi2 = new ImplantationModule(u2, imp2, m2);
+        ImplantationModule mi3 = new ImplantationModule(u1, imp2, m3);
 
         moduleImplantationRepository.saveAll(Arrays.asList(mi1, mi2, mi3));
 

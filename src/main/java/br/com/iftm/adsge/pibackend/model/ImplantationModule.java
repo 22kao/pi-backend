@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModuleImplantation {
+public class ImplantationModule {
 
     @EmbeddedId
     private ModuleImplantationId id;
@@ -51,7 +51,7 @@ public class ModuleImplantation {
     @OneToMany(mappedBy = "moduleImplantation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Observation> observations;
 
-    public ModuleImplantation(User user, Implantation implantation, Module module) {
+    public ImplantationModule(User user, Implantation implantation, Module module) {
         this.dtInitial = LocalDateTime.now();
         this.status = ProgressStatus.IN_PROGRESS;
         this.user = user;

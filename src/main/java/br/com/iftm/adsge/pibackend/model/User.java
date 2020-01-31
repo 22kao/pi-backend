@@ -4,8 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,7 +30,7 @@ public class User {
     @Builder.Default
     @Transient
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ModuleImplantation> modulesImplantation = new HashSet<>();
+    private Set<ImplantationModule> modulesImplantation = new HashSet<>();
 
     //todo relação authority
 }

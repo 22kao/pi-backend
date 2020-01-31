@@ -1,12 +1,9 @@
 package br.com.iftm.adsge.pibackend.model;
 
 import br.com.iftm.adsge.pibackend.model.enums.ProgressStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +37,7 @@ public class Implantation {
     @Builder.Default
     @OneToMany(mappedBy = "implantation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Set<ModuleImplantation> modulesImplantation = new HashSet<>();
+    private Set<ImplantationModule> modulesImplantation = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")

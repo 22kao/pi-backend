@@ -20,7 +20,7 @@ public class Module {
 
     @Transient
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ModuleImplantation> moduleImplantation;
+    private List<ImplantationModule> implantationModule;
 
     public Module(String description){
         this.description = description;
