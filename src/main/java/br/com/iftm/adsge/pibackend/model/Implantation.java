@@ -24,7 +24,6 @@ public class Implantation {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank(message = "Implantation's description cannot be blank")
     private String description;
 
     private LocalDateTime dtExpectedInitial;
@@ -54,8 +53,4 @@ public class Implantation {
         this.dtInitial = LocalDateTime.now();
         this.company = company;
     }
-
-    //todo alterar criaçaõ de progress status e dtinitial para o serviço de adição de uma nova implantação
-    //todo acrescentar método para adicionar um módulo a esta implantação
-    //todo quando o expected alterar a data, a data anterior será adicionada ao expectedInitial
 }

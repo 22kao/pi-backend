@@ -2,8 +2,12 @@ package br.com.iftm.adsge.pibackend.controller.exceptions;
 
 import br.com.iftm.adsge.pibackend.service.exceptions.DatabaseException;
 import br.com.iftm.adsge.pibackend.service.exceptions.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -57,7 +61,6 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<StandardError> constraintViolation(ConstraintViolationException e, HttpServletRequest request){
-
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError standardError = StandardError.builder()
                 .status(status.value())
@@ -69,8 +72,31 @@ public class RestExceptionHandler {
         return ResponseEntity.status(status).body(standardError);
     }
 
-    //todo Make one with MethodArgumentNotValidException
-    //getBindingResult.errors[]. foreach -> defaultMessage
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardError> argumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String msgError = e.getBindingResult().getFieldError().getDefaultMessage();
+        StandardError standardError = StandardError.builder()
+                .status(status.value())
+                .error(ErrorMessage.ARGUMENT_INVALID.getMessage())
+                .message(msgError)
+                .timestamp(Instant.now())
+                .path(request.getRequestURI()).build();
 
+        return ResponseEntity.status(status).body(standardError);
 
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<StandardError> jsonParse(HttpMessageNotReadableException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError standardError = StandardError.builder()
+                .status(status.value())
+                .error(ErrorMessage.JSON_PARSE_ERROR.getMessage())
+                .message(e.getMessage())
+                .timestamp(Instant.now())
+                .path(request.getRequestURI()).build();
+
+        return ResponseEntity.status(status).body(standardError);
+    }
 }
