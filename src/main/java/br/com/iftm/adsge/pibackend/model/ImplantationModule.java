@@ -16,40 +16,44 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImplantationModule {
-
-    @EmbeddedId
-    private ModuleImplantationId id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("implantationId")
-    private Implantation implantation;
-
-    @ManyToOne
-    @JoinColumn(name = "module_id", referencedColumnName = "id", nullable = false)
-    @JsonIgnore
-    private Module module;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
+    private Long id;
 
     @Enumerated(value = EnumType.STRING)
     private ProgressStatus status;
 
-    @PastOrPresent(message = "Module Implantation initial date cannot be in the future")
     private LocalDateTime dtInitial;
 
-    @PastOrPresent(message = "Module Implantation initial date cannot be in the future")
     private LocalDateTime dtEnd;
-
-    private String pendent;
 
     private Integer score;
 
     private String userResponsible;
 
-    @OneToMany(mappedBy = "moduleImplantation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "module_id", referencedColumnName = "id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Module module;
+
+    @OneToMany(mappedBy = "implantationModule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<Observation> observations;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "implantation_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Implantation implantation;
 
     public ImplantationModule(User user, Implantation implantation, Module module) {
         this.dtInitial = LocalDateTime.now();
@@ -57,6 +61,5 @@ public class ImplantationModule {
         this.user = user;
         this.implantation = implantation;
         this.module = module;
-        this.id = new ModuleImplantationId(user.getId(), implantation.getId());
     }
 }

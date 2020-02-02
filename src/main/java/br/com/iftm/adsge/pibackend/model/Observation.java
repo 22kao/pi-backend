@@ -20,11 +20,8 @@ public class Observation {
     @NotBlank(message = "Observation description cannot be null")
     private String description;
 
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "user_id", nullable = false),
-            @JoinColumn(name = "implantation_id", nullable = false)
-    })
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "implantation_module_id")
     private ImplantationModule implantationModule;
 
     public Observation(String description, ImplantationModule module){

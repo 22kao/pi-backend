@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 @Configuration
 @Profile("test")
@@ -115,8 +116,16 @@ public class TestConfig implements CommandLineRunner {
         ImplantationModule mi1 = new ImplantationModule(u1, imp1, m1);
         ImplantationModule mi2 = new ImplantationModule(u2, imp2, m2);
         ImplantationModule mi3 = new ImplantationModule(u1, imp2, m3);
+        ImplantationModule mi4 = new ImplantationModule(u1, imp2, m1);
+        ImplantationModule mi5 = new ImplantationModule(u1, imp2, m2);
+        ImplantationModule mi6 = new ImplantationModule(u1, imp1, m3);
+        ImplantationModule mi7 = new ImplantationModule(u1, imp1, m2);
+        ImplantationModule mi8 = new ImplantationModule(u2, imp1, m1);
+        ImplantationModule mi9 = new ImplantationModule(u2, imp2, m3);
 
-        moduleImplantationRepository.saveAll(Arrays.asList(mi1, mi2, mi3));
+        imp1.setModulesImplantation(new HashSet<>(Arrays.asList(mi1, mi6, mi7, mi8)));
+        imp2.setModulesImplantation(new HashSet<>(Arrays.asList(mi2, mi3, mi4, mi5, mi9)));
+        moduleImplantationRepository.saveAll(Arrays.asList(mi1, mi2, mi3, mi4, mi5, mi6, mi7, mi8, mi9));
 
         //Observations
         Observation ob1 = new Observation("Observation 1", mi1);

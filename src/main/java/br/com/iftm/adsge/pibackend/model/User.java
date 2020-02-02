@@ -12,6 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class User {
 
     @Id
@@ -28,8 +29,8 @@ public class User {
     private String password;
 
     @Builder.Default
-    @Transient
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private Set<ImplantationModule> modulesImplantation = new HashSet<>();
 
     //todo relação authority

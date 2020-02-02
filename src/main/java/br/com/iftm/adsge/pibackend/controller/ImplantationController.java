@@ -1,6 +1,7 @@
 package br.com.iftm.adsge.pibackend.controller;
 
 import br.com.iftm.adsge.pibackend.model.dto.ImplantationDto;
+import br.com.iftm.adsge.pibackend.model.dto.ImplantationModuleDto;
 import br.com.iftm.adsge.pibackend.service.ImplantationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -37,22 +38,40 @@ public class ImplantationController {
 
     @PostMapping(value = "/company/{id}")
     public ResponseEntity<ImplantationDto> save(@PathVariable Integer id,
-                                                @Valid @RequestBody ImplantationDto implantationDto){
+                                                @Valid @RequestBody ImplantationDto implantationDto) {
+        ImplantationDto newImplantationDto = service.save(id, implantationDto);
+
         URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
+                .fromPath("/implantation/{id}")
                 .buildAndExpand(id)
                 .toUri();
-        return ResponseEntity.created(location).body(service.save(id, implantationDto));
+        return ResponseEntity.created(location).body(newImplantationDto);
     }
 
-    @DeleteMapping(value = "{/id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ImplantationDto> update(@PathVariable Long id, @Valid @RequestBody ImplantationDto implantationDto){
+    public ResponseEntity<ImplantationDto> update(@PathVariable Long id, @Valid @RequestBody ImplantationDto implantationDto) {
         return ResponseEntity.ok(service.update(id, implantationDto));
+    }
+
+    /*
+     * Implantation Modules
+     */
+
+    @GetMapping(value = "/{id}/modules")
+    public ResponseEntity<List<ImplantationModuleDto>> findAllModulesByImplantationId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.FindAllModules(id));
+    }
+
+    @PostMapping(value = "/{id}/modules")
+    public ResponseEntity<Void> addImplantationModule(@PathVariable Long id,
+                                                                       @Valid @RequestBody ImplantationModuleDto impModuleDto) {
+        service.addImplantationModule(id, impModuleDto);
+        return ResponseEntity.noContent().build();
     }
 }

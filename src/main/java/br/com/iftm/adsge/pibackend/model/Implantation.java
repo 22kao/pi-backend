@@ -13,12 +13,11 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Implantation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     private String description;
@@ -37,11 +36,13 @@ public class Implantation {
     @Builder.Default
     @OneToMany(mappedBy = "implantation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<ImplantationModule> modulesImplantation = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Company company;
 
     public Implantation(String description, Company company){

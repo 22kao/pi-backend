@@ -47,16 +47,4 @@ public class ImplantationDto {
         this.dtInitial = imp.getDtInitial();
         this.status = imp.getStatus();
     }
-
-    public Implantation toEntity() {
-        return Implantation.builder()
-                .id(null)
-                .description(description)
-                .dtExpected(dtExpected)
-                .dtExpectedInitial(dtExpectedInitial)
-                .dtRealized(dtRealized)
-                .dtInitial(dtInitial)
-                .status(status)
-                .build();
-    }
 }
