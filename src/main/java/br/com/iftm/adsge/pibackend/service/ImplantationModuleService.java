@@ -2,9 +2,13 @@ package br.com.iftm.adsge.pibackend.service;
 
 import br.com.iftm.adsge.pibackend.model.ImplantationModule;
 import br.com.iftm.adsge.pibackend.model.Module;
+import br.com.iftm.adsge.pibackend.model.Observation;
+import br.com.iftm.adsge.pibackend.model.User;
 import br.com.iftm.adsge.pibackend.model.dto.ImplantationModuleDto;
-import br.com.iftm.adsge.pibackend.repository.ModuleImplantationRepository;
+import br.com.iftm.adsge.pibackend.model.dto.ObservationDto;
+import br.com.iftm.adsge.pibackend.repository.ImplantationModuleRepository;
 import br.com.iftm.adsge.pibackend.repository.ModuleRepository;
+import br.com.iftm.adsge.pibackend.repository.UserRepository;
 import br.com.iftm.adsge.pibackend.service.exceptions.DatabaseException;
 import br.com.iftm.adsge.pibackend.service.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +26,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImplantationModuleService {
 
-    private final ModuleImplantationRepository repository;
+    private final ImplantationModuleRepository repository;
     private final ModuleRepository moduleRepository;
+    private final UserRepository userRepository;
 
     public List<ImplantationModuleDto> findAll() {
         List<ImplantationModule> list = repository.findAll();
@@ -58,6 +63,26 @@ public class ImplantationModuleService {
         }
     }
 
+    public List<ObservationDto> findAllObservations(Long id) {
+        try {
+            ImplantationModule implModule = repository.getOne(id);
+            return implModule.getObservations().stream().map(e -> new ObservationDto(e)).collect(Collectors.toList());
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Implantation module id %s not found", id));
+        }
+    }
+
+    public void addObservation(Long id, ObservationDto obsDto) {
+        try {
+            ImplantationModule implModule = repository.getOne(id);
+            Observation observation = createObservation(implModule, obsDto);
+            implModule.getObservations().add(observation);
+            repository.save(implModule);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(String.format("Implantation module id %s not found", id));
+        }
+    }
+
     private void updateData(ImplantationModule impModule, ImplantationModuleDto impModuleDto) {
         impModule.setStatus(impModuleDto.getStatus());
         impModule.setDtEnd(impModuleDto.getDtEnd());
@@ -75,5 +100,20 @@ public class ImplantationModuleService {
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Module id %s not found", moduleId));
         }
+    }
+
+    private Observation createObservation(ImplantationModule implModule, ObservationDto obsDto) {
+        //todo alterar para preupdate = user.authenticated
+
+        User user = userRepository.findByName(obsDto.getUsername());
+
+        if (user == null)
+            throw new ResourceNotFoundException(String.format("Username '%s' not found", obsDto.getUsername()));
+
+        return Observation.builder()
+                .user(user)
+                .implantationModule(implModule)
+                .description(obsDto.getDescription())
+                .build();
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -34,7 +35,7 @@ public class TestConfig implements CommandLineRunner {
     private ObservationRepository observationRepository;
 
     @Autowired
-    private ModuleImplantationRepository moduleImplantationRepository;
+    private ImplantationModuleRepository moduleImplantationRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -128,11 +129,26 @@ public class TestConfig implements CommandLineRunner {
         moduleImplantationRepository.saveAll(Arrays.asList(mi1, mi2, mi3, mi4, mi5, mi6, mi7, mi8, mi9));
 
         //Observations
-        Observation ob1 = new Observation("Observation 1", mi1);
-        Observation ob2 = new Observation("Observation 2", mi1);
-        Observation ob3 = new Observation("Observation 3", mi2);
-        Observation ob4 = new Observation("Observation 4", mi2);
-        Observation ob5 = new Observation("Observation 5", mi3);
+        Observation ob1 = Observation.builder()
+                .description("First observation")
+                .implantationModule(mi1)
+                .user(u1).build();
+        Observation ob2 = Observation.builder()
+                .description("Second observation")
+                .implantationModule(mi1)
+                .user(u1).build();
+        Observation ob3 = Observation.builder()
+                .description("Third observation")
+                .implantationModule(mi2)
+                .user(u2).build();
+        Observation ob4 = Observation.builder()
+                .description("Fourth observation")
+                .implantationModule(mi2)
+                .user(u1).build();
+        Observation ob5 = Observation.builder()
+                .description("Fifth observation")
+                .implantationModule(mi3)
+                .user(u2).build();
 
         observationRepository.saveAll(Arrays.asList(ob1, ob2, ob3, ob4, ob5));
     }

@@ -7,10 +7,7 @@ import br.com.iftm.adsge.pibackend.model.Module;
 import br.com.iftm.adsge.pibackend.model.User;
 import br.com.iftm.adsge.pibackend.model.dto.ImplantationDto;
 import br.com.iftm.adsge.pibackend.model.dto.ImplantationModuleDto;
-import br.com.iftm.adsge.pibackend.repository.CompanyRepository;
-import br.com.iftm.adsge.pibackend.repository.ImplantationRepository;
-import br.com.iftm.adsge.pibackend.repository.ModuleRepository;
-import br.com.iftm.adsge.pibackend.repository.UserRepository;
+import br.com.iftm.adsge.pibackend.repository.*;
 import br.com.iftm.adsge.pibackend.service.exceptions.DatabaseException;
 import br.com.iftm.adsge.pibackend.service.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,7 @@ import java.util.stream.Collectors;
 public class ImplantationService {
 
     private final ImplantationRepository repository;
+    private final ImplantationModuleRepository implantationModuleRepository;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final ModuleRepository moduleRepository;
@@ -50,12 +48,9 @@ public class ImplantationService {
         return list.stream().map(e -> new ImplantationDto(e)).collect(Collectors.toList());
     }
 
-    //todo alterar consulta para dentro do implantationmodulerepository
     public List<ImplantationModuleDto> FindAllModules(Long id) {
-        Optional<Implantation> obj = repository.findById(id);
-        Implantation implantation = obj.orElseThrow(() ->
-                new ResourceNotFoundException(String.format("Implantation id %s not found", id)));
-        return implantation.getModulesImplantation().stream().map(e -> new ImplantationModuleDto(e)).collect(Collectors.toList());
+        List<ImplantationModule> list = implantationModuleRepository.findAllByImplantationId(id);
+        return list.stream().map(e -> new ImplantationModuleDto(e)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -106,7 +101,8 @@ public class ImplantationService {
     public void addImplantationModule(Long id, ImplantationModuleDto implModuleDto) {
         try {
             Implantation implantation = repository.getOne(id);
-            implantation.getModulesImplantation().add(createImplantationModule(implantation, implModuleDto));
+            ImplantationModule newImplModuleDto = createImplantationModule(implantation, implModuleDto);
+            implantation.getModulesImplantation().add(newImplModuleDto);
             repository.save(implantation);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Implantation id %s not found", id));
@@ -117,7 +113,7 @@ public class ImplantationService {
                                                         ImplantationModuleDto implModuleDto) {
         try {
             //todo alterar para usuário autenticado
-            Optional<User> objUser = userRepository.findById(1L);
+            Optional<User> objUser = userRepository.findById(1);
             User user = objUser.orElseThrow(() -> new ResourceNotFoundException("User authenticated not found"));
 
             Module module = moduleRepository.getOne(implModuleDto.getModuleId());

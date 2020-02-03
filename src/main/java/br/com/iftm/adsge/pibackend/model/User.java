@@ -4,7 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -12,11 +14,11 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
     private Integer id;
 
     private String name;
@@ -31,7 +33,14 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<ImplantationModule> modulesImplantation = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Observation> observations = new ArrayList<>();
 
     //todo relação authority
 }

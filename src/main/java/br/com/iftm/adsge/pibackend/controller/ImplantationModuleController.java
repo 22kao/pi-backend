@@ -2,6 +2,7 @@ package br.com.iftm.adsge.pibackend.controller;
 
 import br.com.iftm.adsge.pibackend.model.ImplantationModule;
 import br.com.iftm.adsge.pibackend.model.dto.ImplantationModuleDto;
+import br.com.iftm.adsge.pibackend.model.dto.ObservationDto;
 import br.com.iftm.adsge.pibackend.service.ImplantationModuleService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -40,5 +41,15 @@ public class ImplantationModuleController {
         return ResponseEntity.ok(service.update(id, impModuleDto));
     }
 
+    // Observation
+    @GetMapping("/{id}/observation")
+    public ResponseEntity<List<ObservationDto>> findAllObservations(@PathVariable Long id){
+        return ResponseEntity.ok(service.findAllObservations(id));
+    }
 
+    @PostMapping("/{id}/observation")
+    public ResponseEntity<Void> addObservation(@PathVariable Long id, @Valid @RequestBody ObservationDto obsDto){
+        service.addObservation(id, obsDto);
+        return ResponseEntity.noContent().build();
+    }
 }
