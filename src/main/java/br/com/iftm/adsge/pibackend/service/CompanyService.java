@@ -3,10 +3,10 @@ package br.com.iftm.adsge.pibackend.service;
 import br.com.iftm.adsge.pibackend.model.Address;
 import br.com.iftm.adsge.pibackend.model.Company;
 import br.com.iftm.adsge.pibackend.model.Phone;
-import br.com.iftm.adsge.pibackend.model.dto.CompanyDetailed;
-import br.com.iftm.adsge.pibackend.repository.AddressRepository;
+import br.com.iftm.adsge.pibackend.model.dto.AddressDto;
+import br.com.iftm.adsge.pibackend.model.dto.CompanyDto;
+import br.com.iftm.adsge.pibackend.model.dto.PhoneDto;
 import br.com.iftm.adsge.pibackend.repository.CompanyRepository;
-import br.com.iftm.adsge.pibackend.repository.PhoneRepository;
 import br.com.iftm.adsge.pibackend.service.exceptions.DatabaseException;
 import br.com.iftm.adsge.pibackend.service.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,49 +19,48 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
 
     private final CompanyRepository repository;
-    private final AddressRepository addressRepository;
-    private final PhoneRepository phoneRepository;
 
-    public List<CompanyDetailed> findAll() {
+    public List<CompanyDto> findAll() {
         List<Company> list = repository.findAll();
-        List<CompanyDetailed> detailedList = new ArrayList<>();
-        for (Company company : list) {
-            detailedList.add(createCompanyDetailed(company));
-        }
-        return detailedList;
+        return list
+                .stream()
+                .map(e -> createCompanyDto(e))
+                .collect(Collectors.toList());
     }
 
-    public CompanyDetailed findById(Integer id) {
+    public CompanyDto findById(Integer id) {
         Optional<Company> obj = repository.findById(id);
         Company company = obj.orElseThrow(() ->
                 new ResourceNotFoundException(String.format("Company id %s not found", id)));
-        return createCompanyDetailed(company);
+        return createCompanyDto(company);
     }
 
     @Transactional
-    public CompanyDetailed save(CompanyDetailed dto) {
+    public CompanyDto save(CompanyDto dto) {
         Company company = dto.toEntity();
         setAddress(company, dto.getAddress());
         setPhoneList(company, dto.getPhones());
-        return createCompanyDetailed(repository.save(company));
+        return createCompanyDto(repository.save(company));
     }
 
     @Transactional
-    public CompanyDetailed update(Integer id, CompanyDetailed dto) {
+    public CompanyDto update(Integer id, CompanyDto dto) {
         try {
             Company company = repository.getOne(id);
             company.setName(dto.getName());
             company.setDocument(dto.getDocument());
             company.setEmail(dto.getEmail());
+
             updateAddress(company, dto.getAddress());
             updatePhones(company, dto.getPhones());
-            return createCompanyDetailed(repository.save(company));
+            return createCompanyDto(repository.save(company));
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(String.format("Company id %s not found", id));
         }
@@ -77,61 +76,70 @@ public class CompanyService {
         }
     }
 
-    @Transactional
-    public List<Phone> setPhoneList(Integer id, List<Phone> phones) {
-        try {
-            Company company = repository.getOne(id);
-            setPhoneList(company, phones);
-            return repository.save(company).getPhones();
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(String.format("Company id %s not found", id));
+    private void setPhoneList(Company company, List<PhoneDto> phonesDto) {
+        List<String> phoneNumbers = new ArrayList<>();
+        List<String> phoneUsernames = new ArrayList<>();
+        for (Phone phone : company.getPhones()) {
+            phoneNumbers.add(phone.getPhone());
+            phoneUsernames.add(phone.getUsername());
         }
+
+        List<PhoneDto> newPhones = new ArrayList<>();
+        for (PhoneDto dto : phonesDto) {
+            if (!phoneNumbers.contains(dto.getPhone()) || !phoneUsernames.contains(dto.getUsername()))
+                newPhones.add(dto);
+        }
+
+        company.setPhones(newPhones
+                .stream()
+                .map(e -> new Phone(null, e.getPhone(), e.getUsername(), company))
+                .collect(Collectors.toList()));
     }
 
-    private void setPhoneList(Company company, List<Phone> phones) {
-        company.getPhones().clear();
-        for (Phone phone : phones) {
-            phone.setId(null);
-            phone.setCompany(company);
-            company.getPhones().add(phone);
-        }
-    }
-
-    private void setAddress(Company company, Address address) {
-        if (address != null) {
-            address.setId(null);
+    private void setAddress(Company company, AddressDto addressDto) {
+        if (addressDto != null) {
+            Address address = addressDto.toEntity();
             address.setCompany(company);
             company.setAddress(address);
         }
     }
 
-    private CompanyDetailed createCompanyDetailed(Company company) {
-        CompanyDetailed dto = new CompanyDetailed(company);
-        dto.setAddress(company.getAddress());
-        dto.setPhones(company.getPhones());
-        return dto;
+    private CompanyDto createCompanyDto(Company company) {
+        CompanyDto companyDto = new CompanyDto(company);
+
+        if (company.getAddress() != null) {
+            AddressDto addressDto = new AddressDto(company.getAddress());
+            companyDto.setAddress(addressDto);
+        }
+
+        companyDto.setPhones(company.getPhones()
+                .stream()
+                .map(e -> new PhoneDto(e))
+                .collect(Collectors.toList()));
+        return companyDto;
     }
 
-    private void updatePhones(Company company, List<Phone> phones) {
-        if (phones.isEmpty())
-            company.getPhones().clear();
+    private void updatePhones(Company company, List<PhoneDto> phonesDto) {
+        if (phonesDto.isEmpty())
+            return;
 
-        if (!company.getPhones().containsAll(phones))
-            setPhoneList(company, phones);
+        if (!company.getPhones().containsAll(phonesDto))
+            setPhoneList(company, phonesDto);
     }
 
-    private void updateAddress(Company company, Address newAddress) {
-        if (newAddress == null)
-            company.setAddress(null);
+    private void updateAddress(Company company, AddressDto addressDto) {
+        if (addressDto == null)
+            return;
 
-        Address address = company.getAddress();
-        address = addressRepository.getOne(address.getId());
-        address.setCity(newAddress.getCity());
-        address.setNumber(newAddress.getNumber());
-        address.setStreet(newAddress.getStreet());
-        address.setState(newAddress.getState());
-        address.setCep(newAddress.getCep());
-        addressRepository.save(address);
+        if (company.getAddress() == null) {
+            company.setAddress(addressDto.toEntity());
+            company.getAddress().setCompany(company);
+        } else {
+            company.getAddress().setCity(addressDto.getCity());
+            company.getAddress().setNumber(addressDto.getNumber());
+            company.getAddress().setStreet(addressDto.getStreet());
+            company.getAddress().setState(addressDto.getState());
+            company.getAddress().setCep(addressDto.getCep());
+        }
     }
-
 }

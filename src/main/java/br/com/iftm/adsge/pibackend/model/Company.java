@@ -19,15 +19,12 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Company name cannot be blank")
     @EqualsAndHashCode.Include
     private String name;
 
-    @NotBlank(message = "Company document cannot be blank")
     @EqualsAndHashCode.Include
     private String document;
 
-    @Email(message = "Email should be valid")
     private String email;
 
     @ToString.Exclude

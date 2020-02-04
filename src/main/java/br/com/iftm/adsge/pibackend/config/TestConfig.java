@@ -42,18 +42,6 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        //todo create exception handler for Caused by: javax.validation.ConstraintViolationException:
-
-        //todo
-        /* classe ModuleImplantation
-        - pendency é necessário? tendo em vista a tabela de observação
-        - status é um enum
-
-        classe Observation
-        - adição de data da observação
-        - alteração de string do usuário para a classe User*/
-
         //Users
         User u1 = User.builder()
                 .email("teste@gmail.com")
@@ -79,11 +67,11 @@ public class TestConfig implements CommandLineRunner {
         companyRepository.saveAll(Arrays.asList(c1, c2, c3, c4, c5));
 
         //Address
-        Address ad1 = new Address("DuqCity", "Street Duq", 145, c1);
-        Address ad2 = new Address("JoaCity", "Street Joa", 1653, c3);
-        Address ad3 = new Address("CatCity", "Street Cat", 452, c2);
-        Address ad4 = new Address("ArlCity", "Street Arl", 985, c4);
-        Address ad5 = new Address("GomCity", "Street Gom", 1201, c5);
+        Address ad1 = Address.builder().street("Street Duq").number(145).company(c1).build();
+        Address ad2 = Address.builder().street("Street Joa").number(1653).company(c3).build();
+        Address ad3 = Address.builder().street("Street Cat").number(452).company(c2).build();
+        Address ad4 = Address.builder().street("Street Arl").number(985).company(c4).build();
+        Address ad5 = Address.builder().street("Street Gom").number(1201).company(c5).build();
 
         addressRepository.saveAll(Arrays.asList(ad1, ad2, ad3, ad4, ad5));
 
@@ -93,7 +81,6 @@ public class TestConfig implements CommandLineRunner {
         Phone p3 = new Phone(null, "34954565333", "Alphonse", c3);
         Phone p4 = new Phone(null, "34948785511", "Kile", c1);
         Phone p5 = new Phone(null, "34969852234", "Gon", c4);
-        //todo testar criação de telefone sem empresa
         Phone p6 = new Phone(null, "34923214455", "Kur", c5);
 
         phoneRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6));

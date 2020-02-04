@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,24 +17,19 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyDetailed {
-
+public class CompanyDto {
 
     private Integer id;
+    @NotBlank(message = "Company name cannot be blank")
     private String name;
+    @NotBlank(message = "Company document cannot be blank")
     private String document;
+    @Email(message = "Email should be valid")
     private String email;
-    private List<Phone> phones = new ArrayList<>();
-    private Address address;
+    private List<PhoneDto> phones = new ArrayList<>();
+    private AddressDto address;
 
-    public CompanyDetailed(Integer id, String name, String document, String email) {
-        this.id = id;
-        this.name = name;
-        this.document = document;
-        this.email = email;
-    }
-
-    public CompanyDetailed(Company company) {
+    public CompanyDto(Company company) {
         this.id = company.getId();
         this.name = company.getName();
         this.document = company.getDocument();
@@ -40,6 +37,10 @@ public class CompanyDetailed {
     }
 
     public Company toEntity() {
-        return Company.builder().id(null).name(name).document(document).email(email).build();
+        return Company.builder()
+                .id(null)
+                .name(name)
+                .document(document)
+                .email(email).build();
     }
 }

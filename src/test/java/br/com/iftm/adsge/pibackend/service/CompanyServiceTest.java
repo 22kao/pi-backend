@@ -3,7 +3,7 @@ package br.com.iftm.adsge.pibackend.service;
 import br.com.iftm.adsge.pibackend.model.Address;
 import br.com.iftm.adsge.pibackend.model.Company;
 import br.com.iftm.adsge.pibackend.model.Phone;
-import br.com.iftm.adsge.pibackend.model.dto.CompanyDetailed;
+import br.com.iftm.adsge.pibackend.model.dto.CompanyDto;
 import br.com.iftm.adsge.pibackend.repository.AddressRepository;
 import br.com.iftm.adsge.pibackend.repository.CompanyRepository;
 import br.com.iftm.adsge.pibackend.service.exceptions.ResourceNotFoundException;
@@ -22,7 +22,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +41,7 @@ class CompanyServiceTest {
 
     @Test
     void savedCompanyAndCompanyDetailed_hasNameAndDocumentEquals() {
-        CompanyDetailed detailed = new CompanyDetailed();
+        CompanyDto detailed = new CompanyDto();
         detailed.setName("Company Sample");
         detailed.setDocument("123456");
 
@@ -53,7 +52,7 @@ class CompanyServiceTest {
         when(repository.save(any(Company.class))).thenReturn(company);
 
         //When
-        CompanyDetailed created = service.save(detailed);
+        CompanyDto created = service.save(detailed);
 
         //then
         assertThat(created.getName()).isEqualTo(detailed.getName());
@@ -62,7 +61,7 @@ class CompanyServiceTest {
 
     @Test
     void savedCompanyAndCompanyDetailed_hasAddressEquals() {
-        CompanyDetailed detailed = new CompanyDetailed();
+        CompanyDto detailed = new CompanyDto();
         detailed.setAddress(Address.builder().city("GomCity").street("Street Gom").number(1201).build());
 
         // Mock
@@ -71,7 +70,7 @@ class CompanyServiceTest {
 
         when(repository.save(any(Company.class))).thenReturn(company);
 
-        CompanyDetailed created = service.save(detailed);
+        CompanyDto created = service.save(detailed);
 
         assertThat(created.getAddress().getCity()).isEqualTo(detailed.getAddress().getCity());
         assertThat(created.getAddress().getStreet()).isEqualTo(detailed.getAddress().getStreet());
@@ -80,7 +79,7 @@ class CompanyServiceTest {
 
     @Test
     void savedCompanyAndCompanyDetailed_hasPhonesEquals() {
-        CompanyDetailed detailed = new CompanyDetailed();
+        CompanyDto detailed = new CompanyDto();
         Phone p1 = new Phone(null, "34978785454", "Username1", null);
         Phone p2 = new Phone(null, "34976485423", "Username2", null);
         detailed.setPhones(Arrays.asList(p1,p2));
@@ -91,7 +90,7 @@ class CompanyServiceTest {
 
         when(repository.save(any(Company.class))).thenReturn(company);
 
-        CompanyDetailed created = service.save(detailed);
+        CompanyDto created = service.save(detailed);
 
         assertThat(created.getPhones().contains(detailed.getPhones()));
         assertThat(detailed.getPhones().contains(created.getPhones()));
@@ -99,17 +98,17 @@ class CompanyServiceTest {
 
     @Test
     void whenFindAll_ShouldReturnList(){
-        CompanyDetailed detailed = new CompanyDetailed();
-        List<CompanyDetailed> detailedList = Arrays.asList(detailed);
+        CompanyDto detailed = new CompanyDto();
+        List<CompanyDto> detailedList = Arrays.asList(detailed);
 
         //Mock
         List<Company> companies = new ArrayList<>();
-        for(CompanyDetailed cd : detailedList)
+        for(CompanyDto cd : detailedList)
             companies.add(cd.toEntity());
 
         when(repository.findAll()).thenReturn(companies);
 
-        List<CompanyDetailed> created = service.findAll();
+        List<CompanyDto> created = service.findAll();
 
         assertThat(created).isNotEmpty();
         assertThat(detailedList.size()).isEqualTo(created.size());
@@ -125,7 +124,7 @@ class CompanyServiceTest {
         Optional<Company> optCompany = Optional.ofNullable(company);
         when(repository.findById(anyInt())).thenReturn(optCompany);
 
-        CompanyDetailed created = service.findById(id);
+        CompanyDto created = service.findById(id);
 
         assertThat(created.getId()).isEqualTo(id);
         assertThat(created.getId()).isPositive();
@@ -140,7 +139,7 @@ class CompanyServiceTest {
         when(repository.findById(anyInt())).thenReturn(optCompany);
 
         Exception exception = assertThrows(ResourceNotFoundException.class,
-                () -> { CompanyDetailed created = service.findById(id); } );
+                () -> { CompanyDto created = service.findById(id); } );
 
         assertThat(exception.getMessage()).contains(id.toString());
         assertThat(exception.getClass()).isEqualTo(ResourceNotFoundException.class);

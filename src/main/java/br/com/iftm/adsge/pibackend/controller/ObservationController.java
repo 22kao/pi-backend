@@ -36,5 +36,4 @@ public class ObservationController {
     public ResponseEntity<ObservationDto> update(@PathVariable Long id, @Valid @RequestBody ObservationDto obsDto){
         return ResponseEntity.ok(service.update(id, obsDto));
     }
-
 }

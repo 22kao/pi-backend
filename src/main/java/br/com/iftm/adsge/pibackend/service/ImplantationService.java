@@ -39,7 +39,9 @@ public class ImplantationService {
     }
 
     public ImplantationDto findById(Long id) {
-        Implantation implantation = repository.getOne(id);
+        Optional<Implantation> obj = repository.findById(id);
+        Implantation implantation = obj.orElseThrow(()
+                -> new ResourceNotFoundException(String.format("Implantation id %s not found", id)));
         return new ImplantationDto(implantation);
     }
 
@@ -110,7 +112,7 @@ public class ImplantationService {
     }
 
     private ImplantationModule createImplantationModule(Implantation implantation,
-                                                        ImplantationModuleDto implModuleDto) {
+            ImplantationModuleDto implModuleDto) {
         try {
             //todo alterar para usuário autenticado
             Optional<User> objUser = userRepository.findById(1);

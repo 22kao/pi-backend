@@ -72,6 +72,7 @@ public class ImplantationModuleService {
         }
     }
 
+    @Transactional
     public void addObservation(Long id, ObservationDto obsDto) {
         try {
             ImplantationModule implModule = repository.getOne(id);

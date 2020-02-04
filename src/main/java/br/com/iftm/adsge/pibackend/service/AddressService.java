@@ -2,7 +2,7 @@ package br.com.iftm.adsge.pibackend.service;
 
 import br.com.iftm.adsge.pibackend.model.Address;
 import br.com.iftm.adsge.pibackend.model.Company;
-import br.com.iftm.adsge.pibackend.model.dto.AddressCompany;
+import br.com.iftm.adsge.pibackend.model.dto.AddressDto;
 import br.com.iftm.adsge.pibackend.repository.AddressRepository;
 import br.com.iftm.adsge.pibackend.repository.CompanyRepository;
 import br.com.iftm.adsge.pibackend.service.exceptions.DatabaseException;
@@ -25,35 +25,36 @@ public class AddressService {
     private final CompanyRepository companyRepository;
     private final AddressRepository repository;
 
-    public List<AddressCompany> findAll() {
+    public List<AddressDto> findAll() {
         List<Address> list = repository.findAll();
-        return list.stream().map(e -> new AddressCompany(e)).collect(Collectors.toList());
+        return list.stream().map(e -> new AddressDto(e)).collect(Collectors.toList());
     }
 
-    public AddressCompany findById(Integer id){
+    public AddressDto findById(Integer id){
         Optional<Address> address = repository.findById(id);
-        return new AddressCompany(address.orElseThrow(() -> new ResourceNotFoundException(String.format("Address id %s not found", id))));
+        return new AddressDto(address.orElseThrow(()
+                -> new ResourceNotFoundException(String.format("Address id %s not found", id))));
     }
 
     @Transactional
-    public AddressCompany save(Integer companyId, AddressCompany dto){
+    public AddressDto save(Integer companyId, AddressDto dto){
         try{
             Company company = companyRepository.getOne(companyId);
             Address address = dto.toEntity();
             address.setCompany(company);
-            return new AddressCompany(repository.save(address));
+            return new AddressDto(repository.save(address));
         } catch (EntityNotFoundException e){
             throw new ResourceNotFoundException(String.format("Company id %s not found", companyId));
         }
     }
 
     @Transactional
-    public AddressCompany update(Integer companyId, AddressCompany dto) {
+    public AddressDto update(Integer companyId, AddressDto dto) {
         try{
             Company company = companyRepository.getOne(companyId);
             Address address = repository.getOne(company.getAddress().getId());
             updateData(address, dto);
-            return new AddressCompany(repository.save(address));
+            return new AddressDto(repository.save(address));
         } catch (EntityNotFoundException e){
             throw new ResourceNotFoundException(String.format("Company id %s not found", companyId));
         }
@@ -71,7 +72,7 @@ public class AddressService {
         }
     }
 
-    private void updateData(Address address, AddressCompany dto) {
+    private void updateData(Address address, AddressDto dto) {
         address.setStreet(dto.getStreet());
         address.setState(dto.getState());
         address.setNumber(dto.getNumber());
