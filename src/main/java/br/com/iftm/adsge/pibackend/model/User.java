@@ -1,20 +1,19 @@
 package br.com.iftm.adsge.pibackend.model;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +41,33 @@ public class User {
     @EqualsAndHashCode.Exclude
     private List<Observation> observations = new ArrayList<>();
 
-    //todo relação authority
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Role> roles = new HashSet<>();
+
+    @Override public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    @Override public String getUsername() {
+        return email;
+    }
+
+    @Override public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override public boolean isEnabled() {
+        return true;
+    }
 }
