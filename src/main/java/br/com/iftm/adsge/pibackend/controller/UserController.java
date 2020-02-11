@@ -1,23 +1,53 @@
 package br.com.iftm.adsge.pibackend.controller;
 
-import br.com.iftm.adsge.pibackend.model.User;
-import br.com.iftm.adsge.pibackend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import br.com.iftm.adsge.pibackend.model.dto.CompanyDto;
+import br.com.iftm.adsge.pibackend.model.dto.UserDto;
+import br.com.iftm.adsge.pibackend.model.dto.UserInsertDto;
+import br.com.iftm.adsge.pibackend.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/users")
+@RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService service;
 
-    @GetMapping(value = "/all")
-    public List<User> findAll(){
-        return userRepository.findAll();
+    @GetMapping
+    public ResponseEntity<List<UserDto>> findAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<UserDto> findById(Integer id) {
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDto> insert(@RequestBody UserInsertDto dto) {
+        UserDto newDto = service.save(dto);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newDto.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(newDto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable Integer id, @RequestBody UserInsertDto dto) {
+        return ResponseEntity.ok(service.update(id, dto));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
