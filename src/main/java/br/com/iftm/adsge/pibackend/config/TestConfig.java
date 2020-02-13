@@ -58,11 +58,27 @@ public class TestConfig implements CommandLineRunner {
         userRepository.saveAll(Arrays.asList(u1, u2));
 
         //Company
-        Company c1 = new Company("Apple", "12345678910111");
-        Company c2 = new Company("Amazon", "12345678910122");
-        Company c3 = new Company("Sun", "12345678910133");
-        Company c4 = new Company("UnitedHealth Group", "12345678910144");
-        Company c5 = new Company("Burger King", "12345678910155");
+
+        Company c1 = Company.builder()
+                .name("Apple")
+                .document("12345678910111")
+                .email("apple@apple.com").build();
+        Company c2 = Company.builder()
+                .name("Amazon")
+                .document("12345678910122")
+                .email("amazon@amazon.com").build();
+        Company c3 = Company.builder()
+                .name("Sun")
+                .document("12345678910133")
+                .email("sun@oracle.com").build();
+        Company c4 = Company.builder()
+                .name("UnitedHealth Group")
+                .document("12345678910144")
+                .email("ugh@ugh.com").build();
+        Company c5 = Company.builder()
+                .name("Burger King")
+                .document("12345678910155")
+                .email("bk@bk.com").build();
 
         companyRepository.saveAll(Arrays.asList(c1, c2, c3, c4, c5));
 

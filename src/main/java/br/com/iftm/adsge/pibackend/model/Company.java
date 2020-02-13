@@ -3,8 +3,6 @@ package br.com.iftm.adsge.pibackend.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 @Data
@@ -29,7 +27,10 @@ public class Company {
 
     @ToString.Exclude
     @Builder.Default
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "company",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
     private List<Phone> phones = new ArrayList<>();
 
     @ToString.Exclude
@@ -38,7 +39,7 @@ public class Company {
 
     @ToString.Exclude
     @Builder.Default
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private Set<Implantation> implantation = new HashSet<>();
 
     public Company(String name, String document){
